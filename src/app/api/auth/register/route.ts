@@ -29,7 +29,8 @@ export async function POST(req: NextRequest) {
     .single()
 
   if (error) {
-    return NextResponse.json({ error: 'Failed to create account' }, { status: 500 })
+    console.error('Register error:', error)
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
   return NextResponse.json({ player: data })
