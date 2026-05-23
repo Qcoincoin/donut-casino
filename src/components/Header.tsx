@@ -22,17 +22,23 @@ export default function Header({ player, onWallet, onLogout }: Props) {
       <div className="flex items-center gap-2">
         <button
           onClick={onWallet}
-          className="flex items-center gap-2 bg-[#1a2030] hover:bg-[#232b3e] border border-[#232b3e] hover:border-[#f5c542]/30 rounded-lg px-3 py-1.5 transition-all"
+          className="flex items-center gap-1.5 bg-[#1a2030] hover:bg-[#232b3e] border border-[#232b3e] hover:border-[#3dd68c]/30 rounded-lg px-3 py-1.5 transition-all"
         >
-          <span className="text-base">🍩</span>
+          <span className="text-[#8892a4] text-sm font-medium">$</span>
           <span className="text-white font-bold text-sm">{player.balance.toLocaleString()}</span>
-          <span className="text-[#8892a4] text-xs font-medium">DC</span>
         </button>
         <button
           onClick={onWallet}
-          className="bg-[#f5c542] hover:bg-[#e6b800] active:scale-95 text-[#0b0e14] font-bold px-4 py-1.5 rounded-lg text-sm transition-all flex items-center gap-1.5"
+          className="bg-[#3dd68c] hover:bg-[#2fc47a] active:scale-95 text-[#0b0e14] font-bold px-4 py-1.5 rounded-lg text-sm transition-all flex items-center gap-1.5"
         >
-          <span>+</span> Wallet
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 12V22H4V12"/>
+            <path d="M22 7H2v5h20V7z"/>
+            <path d="M12 22V7"/>
+            <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+            <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+          </svg>
+          Wallet
         </button>
       </div>
 
