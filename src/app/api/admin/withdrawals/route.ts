@@ -30,8 +30,9 @@ export async function POST(req: NextRequest) {
 
   await db.from('withdrawals').update({ status: action === 'confirm' ? 'confirmed' : 'rejected' }).eq('id', withdrawalId)
 
-  if (action === 'confirm') {
-    await db.rpc('decrement_balance', { player_id: withdrawal.player_id, amount: withdrawal.amount })
+  if (action === 'reject') {
+    // Balance was deducted on submit — refund it if rejected
+    await db.rpc('increment_balance', { player_id: withdrawal.player_id, amount: withdrawal.amount })
   }
 
   return NextResponse.json({ ok: true })
