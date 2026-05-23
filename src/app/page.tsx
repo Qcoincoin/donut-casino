@@ -1,8 +1,10 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 import LoginModal from '@/components/LoginModal'
-import DepositModal from '@/components/DepositModal'
-import WithdrawModal from '@/components/WithdrawModal'
+import Sidebar from '@/components/Sidebar'
+import Header from '@/components/Header'
+import WalletModal from '@/components/WalletModal'
 
 interface Player {
   id: string
@@ -10,10 +12,20 @@ interface Player {
   balance: number
 }
 
+const GAMES = [
+  { name: 'Coin Flip', icon: '🪙', href: '/games/coinflip', desc: 'Double or nothing', color: 'from-yellow-500/20 to-yellow-600/5' },
+  { name: 'Dice Roll', icon: '🎲', href: '#', desc: 'Roll the dice', color: 'from-blue-500/20 to-blue-600/5', soon: true },
+  { name: 'Slots', icon: '🎰', href: '#', desc: 'Spin to win', color: 'from-purple-500/20 to-purple-600/5', soon: true },
+  { name: 'Blackjack', icon: '🃏', href: '#', desc: 'Beat the dealer', color: 'from-green-500/20 to-green-600/5', soon: true },
+  { name: 'Roulette', icon: '🎡', href: '#', desc: 'Pick your number', color: 'from-red-500/20 to-red-600/5', soon: true },
+  { name: 'Crash', icon: '📈', href: '#', desc: 'Cash out in time', color: 'from-orange-500/20 to-orange-600/5', soon: true },
+  { name: 'Mines', icon: '💣', href: '#', desc: 'Avoid the mines', color: 'from-pink-500/20 to-pink-600/5', soon: true },
+  { name: 'Hi-Lo', icon: '🔼', href: '#', desc: 'Higher or lower', color: 'from-cyan-500/20 to-cyan-600/5', soon: true },
+]
+
 export default function Home() {
   const [player, setPlayer] = useState<Player | null>(null)
-  const [showDeposit, setShowDeposit] = useState(false)
-  const [showWithdraw, setShowWithdraw] = useState(false)
+  const [showWallet, setShowWallet] = useState(false)
 
   useEffect(() => {
     const saved = localStorage.getItem('donut_player')
@@ -44,53 +56,48 @@ export default function Home() {
     localStorage.removeItem('donut_player')
   }
 
-  function handleModalClose() {
-    setShowDeposit(false)
-    setShowWithdraw(false)
+  function handleWalletClose() {
+    setShowWallet(false)
     if (player) refreshBalance(player)
   }
 
   if (!player) return <LoginModal onLogin={handleLogin} />
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      <header className="border-b border-yellow-500/20 bg-gray-900">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🍩</span>
-            <span className="text-xl font-bold text-yellow-400">Donut Casino</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="bg-gray-800 border border-yellow-500/30 rounded-xl px-4 py-2">
-              <span className="text-gray-400 text-sm">Balance: </span>
-              <span className="text-yellow-400 font-bold">{player.balance.toLocaleString()} DC</span>
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header player={player} onWallet={() => setShowWallet(true)} onLogout={handleLogout} />
+        <main className="flex-1 overflow-y-auto p-6">
+          <div className="max-w-5xl mx-auto">
+            <div className="mb-8">
+              <h1 className="text-2xl font-bold text-white mb-1">Welcome back, <span className="text-[#f5c542]">{player.username}</span>!</h1>
+              <p className="text-[#8892a4] text-sm">Pick a game and start playing with your Donut Coins.</p>
             </div>
-            <button
-              onClick={() => setShowDeposit(true)}
-              className="bg-green-600 hover:bg-green-500 text-white font-semibold px-4 py-2 rounded-xl text-sm transition-colors"
-            >
-              Deposit
-            </button>
-            <button
-              onClick={() => setShowWithdraw(true)}
-              className="bg-gray-700 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-xl text-sm transition-colors"
-            >
-              Withdraw
-            </button>
-            <button onClick={handleLogout} className="text-gray-500 hover:text-gray-300 text-sm transition-colors">
-              Logout
-            </button>
+
+            <h2 className="text-lg font-semibold text-white mb-4">🎮 Games</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {GAMES.map(g => (
+                <Link
+                  key={g.name}
+                  href={g.href}
+                  className={`relative bg-gradient-to-br ${g.color} bg-[#131720] border border-[#232b3e] rounded-2xl p-5 flex flex-col items-center text-center transition-all ${
+                    g.soon ? 'opacity-50 cursor-not-allowed' : 'hover:border-[#f5c542]/40 hover:scale-[1.02]'
+                  }`}
+                >
+                  {g.soon && (
+                    <span className="absolute top-2 right-2 text-[10px] bg-[#232b3e] text-[#8892a4] px-2 py-0.5 rounded-full">Soon</span>
+                  )}
+                  <div className="text-4xl mb-3">{g.icon}</div>
+                  <div className="font-bold text-white text-sm">{g.name}</div>
+                  <div className="text-[#8892a4] text-xs mt-1">{g.desc}</div>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto px-4 py-12 text-center">
-        <h2 className="text-3xl font-bold text-gray-200 mb-2">Welcome, <span className="text-yellow-400">{player.username}</span>!</h2>
-        <p className="text-gray-500">Games coming soon. Deposit DC to get started.</p>
-      </main>
-
-      {showDeposit && <DepositModal playerId={player.id} onClose={handleModalClose} />}
-      {showWithdraw && <WithdrawModal playerId={player.id} balance={player.balance} onClose={handleModalClose} />}
+        </main>
+      </div>
+      {showWallet && <WalletModal playerId={player.id} balance={player.balance} onClose={handleWalletClose} />}
     </div>
   )
 }
