@@ -20,31 +20,33 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="shrink-0 bg-[#131720] border-r border-[#232b3e] flex flex-col h-screen sticky top-0 transition-all duration-300 overflow-hidden"
-      style={{ width: open ? 200 : 56 }}
+      className="shrink-0 flex flex-col h-screen sticky top-0 overflow-hidden transition-all duration-300"
+      style={{ width: open ? 200 : 56, background: '#0f1923', borderRight: '1px solid #1e2d3d' }}
     >
-      {/* Toggle */}
-      <div className="h-14 flex items-center border-b border-[#232b3e] px-3">
+      {/* Toggle / logo */}
+      <div className="h-14 flex items-center px-3 shrink-0" style={{ borderBottom: '1px solid #1e2d3d' }}>
         <button
           onClick={() => setOpen(o => !o)}
-          className="w-8 h-8 flex flex-col items-center justify-center gap-1.5 rounded-lg hover:bg-[#1a2030] transition-colors shrink-0"
+          className="w-8 h-8 flex flex-col items-center justify-center gap-[5px] rounded-lg shrink-0 transition-colors"
+          onMouseEnter={e => (e.currentTarget.style.background = '#16202e')}
+          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
         >
-          <span className="block w-4 h-0.5 bg-[#8892a4]" />
-          <span className="block w-4 h-0.5 bg-[#8892a4]" />
-          <span className="block w-4 h-0.5 bg-[#8892a4]" />
+          <span className="block w-4 h-[2px] rounded-full" style={{ background: '#4a6180' }} />
+          <span className="block w-4 h-[2px] rounded-full" style={{ background: '#4a6180' }} />
+          <span className="block w-4 h-[2px] rounded-full" style={{ background: '#4a6180' }} />
         </button>
         {open && (
-          <Link href="/" className="ml-2 flex items-center gap-1.5 whitespace-nowrap">
-            <span className="text-lg">🍩</span>
-            <span className="text-sm font-bold text-[#f5c542]">Donut Casino</span>
+          <Link href="/" className="ml-3 flex items-center gap-2 whitespace-nowrap">
+            <span className="text-base">🍩</span>
+            <span className="text-sm font-bold" style={{ color: '#3dd68c' }}>Donut Casino</span>
           </Link>
         )}
       </div>
 
-      {/* Games */}
+      {/* Games nav */}
       <nav className="flex-1 overflow-y-auto py-3">
         {open && (
-          <p className="text-[#8892a4] text-[10px] font-semibold uppercase tracking-wider px-4 mb-2">Games</p>
+          <p className="text-[10px] font-semibold uppercase tracking-widest px-4 mb-2" style={{ color: '#4a6180' }}>Games</p>
         )}
         <div className="space-y-0.5 px-2">
           {games.map(g => {
@@ -54,20 +56,25 @@ export default function Sidebar() {
                 key={g.href}
                 href={g.soon ? '#' : g.href}
                 title={!open ? g.name : undefined}
-                className={`flex items-center gap-3 rounded-lg transition-colors ${open ? 'px-3 py-2.5' : 'px-0 py-2.5 justify-center'} ${
-                  active
-                    ? 'bg-[#f5c542]/10 text-[#f5c542]'
-                    : g.soon
-                    ? 'text-[#8892a4]/50 cursor-default'
-                    : 'text-[#8892a4] hover:bg-[#1a2030] hover:text-white'
-                }`}
+                className="flex items-center rounded-lg transition-colors"
+                style={{
+                  gap: 10,
+                  padding: open ? '8px 12px' : '8px 0',
+                  justifyContent: open ? undefined : 'center',
+                  background: active ? '#1a2d1f' : 'transparent',
+                  color: active ? '#3dd68c' : g.soon ? '#2a3d52' : '#4a6180',
+                  cursor: g.soon ? 'default' : 'pointer',
+                  pointerEvents: g.soon ? 'none' : 'auto',
+                }}
+                onMouseEnter={e => { if (!active && !g.soon) { (e.currentTarget as HTMLElement).style.background = '#16202e'; (e.currentTarget as HTMLElement).style.color = '#c8d8e8' } }}
+                onMouseLeave={e => { if (!active && !g.soon) { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#4a6180' } }}
               >
                 <span className="text-lg shrink-0">{g.icon}</span>
                 {open && (
                   <>
-                    <span className="text-sm font-medium whitespace-nowrap">{g.name}</span>
+                    <span className="text-sm font-medium whitespace-nowrap flex-1">{g.name}</span>
                     {g.soon && (
-                      <span className="ml-auto text-[9px] bg-[#232b3e] text-[#8892a4] px-1.5 py-0.5 rounded-full shrink-0">Soon</span>
+                      <span className="text-[9px] px-1.5 py-0.5 rounded-full shrink-0" style={{ background: '#16202e', color: '#2a3d52' }}>Soon</span>
                     )}
                   </>
                 )}

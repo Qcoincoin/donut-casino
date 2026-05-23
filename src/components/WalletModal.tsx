@@ -72,9 +72,9 @@ export default function WalletModal({ playerId, balance, onClose }: Props) {
   }
 
   const statusBadge = (s: string) => {
-    if (s === 'confirmed') return <span className="text-[10px] bg-[#3dd68c]/20 text-[#3dd68c] px-2 py-0.5 rounded-full font-semibold">Confirmed</span>
-    if (s === 'rejected') return <span className="text-[10px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full font-semibold">Rejected</span>
-    return <span className="text-[10px] bg-[#f5c542]/20 text-[#f5c542] px-2 py-0.5 rounded-full font-semibold">Pending</span>
+    if (s === 'confirmed') return <span className="text-[11px] bg-[#3dd68c]/15 text-[#3dd68c] px-2.5 py-1 rounded-full font-semibold">Confirmed</span>
+    if (s === 'rejected') return <span className="text-[11px] bg-red-500/15 text-red-400 px-2.5 py-1 rounded-full font-semibold">Rejected</span>
+    return <span className="text-[11px] bg-[#f5c542]/15 text-[#f5c542] px-2.5 py-1 rounded-full font-semibold">Pending</span>
   }
 
   const txList = tab === 'deposit' ? deposits : withdrawals
@@ -82,93 +82,163 @@ export default function WalletModal({ playerId, balance, onClose }: Props) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ transition: 'background 0.25s', background: visible ? 'rgba(0,0,0,0.65)' : 'rgba(0,0,0,0)' }}
+      style={{ transition: 'background 0.25s', background: visible ? 'rgba(0,0,0,0.75)' : 'rgba(0,0,0,0)' }}
       onClick={e => { if (e.target === e.currentTarget) close() }}
     >
       <div
-        className="bg-[#1a2030] border border-[#2d3748] rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
+        className="w-full max-w-[420px] rounded-2xl overflow-hidden shadow-2xl"
         style={{
+          background: '#16202e',
+          border: '1px solid #1e2d3d',
           transition: 'transform 0.25s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s',
-          transform: visible ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(20px)',
+          transform: visible ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(24px)',
           opacity: visible ? 1 : 0
         }}
       >
         {/* Tab bar */}
-        <div className="flex items-center bg-[#131720] border-b border-[#232b3e] px-2 pt-2">
+        <div className="flex items-center border-b border-[#1e2d3d] px-1 pt-1" style={{ background: '#0f1923' }}>
           {(['deposit', 'withdraw'] as const).map(t => (
-            <button key={t} onClick={() => switchTab(t)}
-              className={`relative px-5 py-2.5 text-sm font-semibold capitalize transition-colors rounded-t-lg ${tab === t ? 'text-white' : 'text-[#8892a4] hover:text-white'}`}
+            <button
+              key={t}
+              onClick={() => switchTab(t)}
+              className="relative px-6 py-3 text-sm font-semibold capitalize transition-colors"
+              style={{ color: tab === t ? '#fff' : '#4a6180' }}
             >
-              {t}
-              {tab === t && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#f5c542] rounded-full" />}
+              {t.charAt(0).toUpperCase() + t.slice(1)}
+              {tab === t && (
+                <span className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full" style={{ background: '#3dd68c' }} />
+              )}
             </button>
           ))}
-          <button onClick={close} className="ml-auto mr-2 mb-1 w-7 h-7 flex items-center justify-center rounded-lg text-[#8892a4] hover:text-white hover:bg-[#232b3e] transition-colors text-lg">×</button>
+          <button
+            onClick={close}
+            className="ml-auto mr-2 mb-1 w-8 h-8 flex items-center justify-center rounded-lg transition-colors text-lg"
+            style={{ color: '#4a6180' }}
+            onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+            onMouseLeave={e => (e.currentTarget.style.color = '#4a6180')}
+          >×</button>
         </div>
 
-        <div className="p-5 space-y-4 max-h-[80vh] overflow-y-auto">
-          {/* Amount selector */}
+        <div className="p-5 space-y-4 max-h-[78vh] overflow-y-auto">
           {tab === 'deposit' ? (
             <>
-              <p className="text-[#8892a4] text-xs">Select or enter amount to deposit:</p>
+              <p className="text-[#4a6180] text-xs font-medium">Select or enter amount to deposit:</p>
+
               <div className="grid grid-cols-3 gap-2">
                 {AMOUNTS.map(a => (
-                  <button key={a} onClick={() => { setAmount(a); setCustom('') }}
-                    className={`py-2.5 rounded-xl text-sm font-semibold border transition-all ${amount === a ? 'bg-[#f5c542] text-[#0b0e14] border-[#f5c542]' : 'bg-[#131720] text-[#c8d0e0] border-[#232b3e] hover:border-[#f5c542]/40'}`}
+                  <button
+                    key={a}
+                    onClick={() => { setAmount(a); setCustom('') }}
+                    className="py-2.5 rounded-xl text-sm font-bold transition-all"
+                    style={{
+                      background: amount === a ? '#3dd68c' : '#0f1923',
+                      color: amount === a ? '#0b0e14' : '#c8d8e8',
+                      border: `1px solid ${amount === a ? '#3dd68c' : '#1e2d3d'}`,
+                    }}
                   >
-                    {a >= 1000 ? `${a/1000}k` : a} DC
+                    {a >= 1000 ? `${a / 1000}k` : a} DC
                   </button>
                 ))}
               </div>
-              <input type="number" value={custom} onChange={e => { setCustom(e.target.value); setAmount(null) }}
-                placeholder="Custom amount..." className="w-full bg-[#131720] border border-[#232b3e] focus:border-[#f5c542]/50 rounded-xl px-4 py-2.5 text-white placeholder-[#8892a4] focus:outline-none text-sm" />
+
+              <input
+                type="number"
+                value={custom}
+                onChange={e => { setCustom(e.target.value); setAmount(null) }}
+                placeholder="Custom amount..."
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none"
+                style={{ background: '#0f1923', border: '1px solid #1e2d3d', color: '#fff' }}
+                onFocus={e => (e.currentTarget.style.borderColor = '#3dd68c55')}
+                onBlur={e => (e.currentTarget.style.borderColor = '#1e2d3d')}
+              />
+
               {finalAmount && finalAmount > 0 && (
-                <div className="bg-[#131720] border border-[#f5c542]/20 rounded-xl p-4">
-                  <p className="text-[#8892a4] text-xs mb-2"><span className="text-[#f5c542]">①</span> Run in Donut SMP chat:</p>
-                  <div className="bg-[#0b0e14] rounded-lg px-4 py-2.5 font-mono text-[#f5c542] text-sm select-all cursor-copy border border-[#232b3e]">/pay taurasone {finalAmount}</div>
-                  <p className="text-[#8892a4] text-xs mt-2"><span className="text-[#f5c542]">②</span> Then click below</p>
+                <div className="rounded-xl p-4 space-y-2" style={{ background: '#0f1923', border: '1px solid #1e2d3d' }}>
+                  <p className="text-[#4a6180] text-xs"><span className="text-[#3dd68c] font-bold">①</span> Run in Donut SMP chat:</p>
+                  <div className="rounded-lg px-4 py-3 font-mono text-sm select-all cursor-copy" style={{ background: '#080e16', color: '#3dd68c', border: '1px solid #1e2d3d' }}>
+                    /pay taurasone {finalAmount}
+                  </div>
+                  <p className="text-[#4a6180] text-xs"><span className="text-[#3dd68c] font-bold">②</span> Then click the button below</p>
                 </div>
               )}
-              <button onClick={submitDeposit} disabled={!finalAmount || finalAmount < 1 || loading}
-                className="w-full bg-[#3dd68c] hover:bg-[#2fc47a] disabled:opacity-30 disabled:cursor-not-allowed text-[#0b0e14] font-bold py-3 rounded-xl transition-all active:scale-[0.98] text-sm">
+
+              <button
+                onClick={submitDeposit}
+                disabled={!finalAmount || finalAmount < 1 || loading}
+                className="w-full font-bold py-3.5 rounded-xl text-sm transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed"
+                style={{ background: '#3dd68c', color: '#0b0e14' }}
+              >
                 {loading ? 'Submitting...' : "I've sent the payment →"}
               </button>
             </>
           ) : (
             <>
-              <p className="text-[#8892a4] text-xs">Available: <span className="text-[#f5c542] font-semibold">{formatBalance(balance)} DC</span></p>
-              <p className="text-[#8892a4] text-xs bg-[#131720] border border-[#232b3e] rounded-lg p-3">
+              <div className="flex items-center justify-between">
+                <p className="text-[#4a6180] text-xs font-medium">Available balance</p>
+                <p className="text-white font-bold text-sm">{formatBalance(balance)} DC</p>
+              </div>
+
+              <div className="rounded-xl px-4 py-3 text-xs" style={{ background: '#0f1923', border: '1px solid #1e2d3d', color: '#4a6180' }}>
                 ⚠️ Your balance is deducted immediately when you submit a withdrawal request.
-              </p>
+              </div>
+
               <div className="grid grid-cols-3 gap-2">
                 {AMOUNTS.filter(a => a <= balance).map(a => (
-                  <button key={a} onClick={() => { setAmount(a); setCustom('') }}
-                    className={`py-2.5 rounded-xl text-sm font-semibold border transition-all ${amount === a ? 'bg-[#f5c542] text-[#0b0e14] border-[#f5c542]' : 'bg-[#131720] text-[#c8d0e0] border-[#232b3e] hover:border-[#f5c542]/40'}`}
+                  <button
+                    key={a}
+                    onClick={() => { setAmount(a); setCustom('') }}
+                    className="py-2.5 rounded-xl text-sm font-bold transition-all"
+                    style={{
+                      background: amount === a ? '#f5c542' : '#0f1923',
+                      color: amount === a ? '#0b0e14' : '#c8d8e8',
+                      border: `1px solid ${amount === a ? '#f5c542' : '#1e2d3d'}`,
+                    }}
                   >
-                    {a >= 1000 ? `${a/1000}k` : a} DC
+                    {a >= 1000 ? `${a / 1000}k` : a} DC
                   </button>
                 ))}
               </div>
-              <input type="number" value={custom} onChange={e => { setCustom(e.target.value); setAmount(null) }}
-                placeholder="Custom amount..." max={balance} className="w-full bg-[#131720] border border-[#232b3e] focus:border-[#f5c542]/50 rounded-xl px-4 py-2.5 text-white placeholder-[#8892a4] focus:outline-none text-sm" />
+
+              <input
+                type="number"
+                value={custom}
+                onChange={e => { setCustom(e.target.value); setAmount(null) }}
+                placeholder="Custom amount..."
+                max={balance}
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none"
+                style={{ background: '#0f1923', border: '1px solid #1e2d3d', color: '#fff' }}
+                onFocus={e => (e.currentTarget.style.borderColor = '#f5c54255')}
+                onBlur={e => (e.currentTarget.style.borderColor = '#1e2d3d')}
+              />
+
               {error && <p className="text-red-400 text-sm">{error}</p>}
-              <button onClick={submitWithdraw} disabled={!finalAmount || finalAmount < 1 || loading}
-                className="w-full bg-[#f5c542] hover:bg-[#e6b800] disabled:opacity-30 disabled:cursor-not-allowed text-[#0b0e14] font-bold py-3 rounded-xl transition-all active:scale-[0.98] text-sm">
+
+              <button
+                onClick={submitWithdraw}
+                disabled={!finalAmount || finalAmount < 1 || loading}
+                className="w-full font-bold py-3.5 rounded-xl text-sm transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed"
+                style={{ background: '#f5c542', color: '#0b0e14' }}
+              >
                 {loading ? 'Submitting...' : 'Request Withdrawal →'}
               </button>
             </>
           )}
 
-          {/* Transaction history */}
           {txList.length > 0 && (
             <div>
-              <p className="text-[#8892a4] text-xs font-semibold uppercase tracking-wider mb-2">Recent {tab}s</p>
+              <p className="text-[#4a6180] text-[11px] font-semibold uppercase tracking-widest mb-3">
+                Recent {tab}s
+              </p>
               <div className="space-y-2">
                 {txList.map(tx => (
-                  <div key={tx.id} className="flex items-center justify-between bg-[#131720] border border-[#232b3e] rounded-xl px-4 py-2.5">
+                  <div
+                    key={tx.id}
+                    className="flex items-center justify-between px-4 py-3 rounded-xl"
+                    style={{ background: '#0f1923', border: '1px solid #1e2d3d' }}
+                  >
                     <div>
                       <span className="text-white font-semibold text-sm">{formatBalance(tx.amount)} DC</span>
-                      <p className="text-[#8892a4] text-[10px]">{new Date(tx.created_at).toLocaleString()}</p>
+                      <p className="text-[#4a6180] text-[11px] mt-0.5">{new Date(tx.created_at).toLocaleString()}</p>
                     </div>
                     {statusBadge(tx.status)}
                   </div>
