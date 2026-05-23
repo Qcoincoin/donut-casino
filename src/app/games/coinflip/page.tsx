@@ -81,7 +81,7 @@ export default function CoinFlipPage() {
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header player={player} onWallet={() => setShowWallet(true)} onLogout={handleLogout} />
+        <Header player={player} onWallet={() => setShowWallet(true)} onLogin={() => {}} onLogout={handleLogout} />
         <main className="flex-1 overflow-y-auto p-6">
           <div className="max-w-2xl mx-auto">
             <div className="flex items-center gap-2 mb-6 text-[#8892a4] text-sm">
