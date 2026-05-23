@@ -1,4 +1,5 @@
 'use client'
+import { formatBalance } from '@/lib/format'
 
 interface Player {
   id: string
@@ -25,7 +26,7 @@ export default function Header({ player, onWallet, onLogout }: Props) {
           className="flex items-center gap-1.5 bg-[#1a2030] hover:bg-[#232b3e] border border-[#232b3e] hover:border-[#3dd68c]/30 rounded-lg px-3 py-1.5 transition-all"
         >
           <span className="text-[#8892a4] text-sm font-medium">$</span>
-          <span className="text-white font-bold text-sm">{player.balance.toLocaleString()}</span>
+          <span className="text-white font-bold text-sm">{formatBalance(player.balance)}</span>
         </button>
         <button
           onClick={onWallet}

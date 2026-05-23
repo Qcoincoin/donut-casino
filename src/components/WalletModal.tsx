@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { formatBalance } from '@/lib/format'
 
 const AMOUNTS = [100, 250, 500, 1000, 2500, 5000]
 
@@ -135,7 +136,7 @@ export default function WalletModal({ playerId, balance, onClose }: Props) {
             </>
           ) : (
             <>
-              <p className="text-[#8892a4] text-xs">Available: <span className="text-[#f5c542] font-semibold">{balance.toLocaleString()} DC</span></p>
+              <p className="text-[#8892a4] text-xs">Available: <span className="text-[#f5c542] font-semibold">{formatBalance(balance)} DC</span></p>
               <p className="text-[#8892a4] text-xs bg-[#131720] border border-[#232b3e] rounded-lg p-3">
                 ⚠️ Your balance is deducted immediately when you submit a withdrawal request.
               </p>
@@ -166,7 +167,7 @@ export default function WalletModal({ playerId, balance, onClose }: Props) {
                 {txList.map(tx => (
                   <div key={tx.id} className="flex items-center justify-between bg-[#131720] border border-[#232b3e] rounded-xl px-4 py-2.5">
                     <div>
-                      <span className="text-white font-semibold text-sm">{tx.amount.toLocaleString()} DC</span>
+                      <span className="text-white font-semibold text-sm">{formatBalance(tx.amount)} DC</span>
                       <p className="text-[#8892a4] text-[10px]">{new Date(tx.created_at).toLocaleString()}</p>
                     </div>
                     {statusBadge(tx.status)}
