@@ -22,16 +22,17 @@ export default function Header({ player, onWallet, onLogout }: Props) {
       <div className="flex items-center gap-2">
         <button
           onClick={onWallet}
-          className="flex items-center gap-2 bg-[#1a2030] hover:bg-[#232b3e] border border-[#232b3e] hover:border-[#f5c542]/30 rounded-lg px-4 py-1.5 transition-all"
+          className="flex items-center gap-2 bg-[#1a2030] hover:bg-[#232b3e] border border-[#232b3e] hover:border-[#f5c542]/30 rounded-lg px-3 py-1.5 transition-all"
         >
-          <span className="text-[#f5c542] font-bold text-sm">{player.balance.toLocaleString()} DC</span>
-          <span className="text-[#8892a4] text-xs">▾</span>
+          <span className="text-base">🍩</span>
+          <span className="text-white font-bold text-sm">{player.balance.toLocaleString()}</span>
+          <span className="text-[#8892a4] text-xs font-medium">DC</span>
         </button>
         <button
           onClick={onWallet}
-          className="bg-[#f5c542] hover:bg-[#e6b800] active:scale-95 text-[#0b0e14] font-bold px-5 py-1.5 rounded-lg text-sm transition-all"
+          className="bg-[#f5c542] hover:bg-[#e6b800] active:scale-95 text-[#0b0e14] font-bold px-4 py-1.5 rounded-lg text-sm transition-all flex items-center gap-1.5"
         >
-          💰 Wallet
+          <span>+</span> Wallet
         </button>
       </div>
 

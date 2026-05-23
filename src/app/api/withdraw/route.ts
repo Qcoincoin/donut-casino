@@ -18,6 +18,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Insufficient balance' }, { status: 400 })
   }
 
+  // Deduct balance immediately so player can't gamble with pending withdrawal funds
+  await db.rpc('decrement_balance', { player_id: playerId, amount })
+
   const { data, error } = await db
     .from('withdrawals')
     .insert({ player_id: playerId, amount, status: 'pending' })
